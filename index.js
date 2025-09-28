@@ -1,13 +1,24 @@
-import"./assets/styles-JE8YjOlG.js";import{a as r}from"./assets/vendor-CWxt7QI6.js";r.defaults.baseURL="https://dummyjson.com";let g=1;async function m(){return(await r("/products/category-list?")).data}async function c(){return(await r("products?",{params:{limit:12,skip:`${(g-1)*12}`}})).data}async function _(t){return(await r("/products/category/"+t,{params:{limit:12}})).data}function y(t){return t.map(s=>`
+import"./assets/styles-JE8YjOlG.js";import{a as s}from"./assets/vendor-CWxt7QI6.js";s.defaults.baseURL="https://dummyjson.com";async function S(){return(await s("/products/category-list?")).data}async function d(t=1){return(await s("products?",{params:{limit:12,skip:(t-1)*12}})).data}async function f(t,e=1){return(await s("/products/category/"+t,{params:{limit:12,skip:(e-1)*12}})).data}async function v(t){return(await s(`/products/${t}`)).data}async function h(t,e=1){return(await s(`/products/search?q=${t}`,{params:{limit:12,skip:(e-1)*12}})).data}function M(t){return t.map(e=>`
   <li class="categories__item">
-   <button class="categories__btn" type="button">${s}</button>
- </li>`).join("")}function n(t){return t.map(({id:s,images:o,description:e,title:a,category:l,price:d,brand:p})=>`
-  <li class="products__item" data-id="${s}">
-    <img class="products__image" src="${o[0]}" alt="${e}"/>
-    <p class="products__title">${a}</p>
-    <p class="products__brand"><span class="products__brand--bold">Brand: ${p}</span></p>
-    <p class="products__category">Category: ${l} </p>
-    <p class="products__price">Price: ${d}$</p>
+   <button class="categories__btn" type="button">${e}</button>
+ </li>`).join("")}function i(t){return t.map(({id:e,images:o,description:c,title:m,category:g,price:y,brand:_})=>`
+  <li class="products__item" data-id="${e}">
+    <img class="products__image" src="${o[0]}" alt="${c}"/>
+    <p class="products__title">${m}</p>
+    <p class="products__brand"><span class="products__brand--bold">Brand: ${_}</span></p>
+    <p class="products__category">Category: ${g} </p>
+    <p class="products__price">Price: ${y}$</p>
  </li>
-`).join("")}async function f(t){if(t.target.nodeName!=="BUTTON")return;const s=t.target.textContent,o=document.querySelector("div.not-found");try{let e;if(s==="All")e=await c();else if(e=await _(s),e.products.length===0){o.classList.add("not-found--visible");return}o.classList.remove("not-found--visible"),u.innerHTML=n(e.products),document.querySelectorAll(".categories__btn").forEach(a=>a.classList.remove("categories__btn--active")),t.target.classList.add("categories__btn--active")}catch(e){console.log(e)}finally{}}const i=document.querySelector("ul.categories"),u=document.querySelector("ul.products");i.addEventListener("click",f);m().then(t=>{const s=["All",...t];i.innerHTML=y(s)});c().then(t=>{console.log(t),u.innerHTML=n(t.products)});
+`).join("")}function $({images:t,title:e,tags:o,description:c,shippingInformation:m,returnPolicy:g,price:y}){return`
+<img class="modal-product__img" src="${t[0]}" alt="${e}" />
+      <div class="modal-product__content">
+        <p class="modal-product__title">${e}</p>
+        <ul class="modal-product__tags">${(o==null?void 0:o.map(_=>`<li>${_}</li>`).join(""))||""}</ul>
+        <p class="modal-product__description">${c}</p>
+        <p class="modal-product__shipping-information">Shipping: ${m}</p>
+        <p class="modal-product__return-policy">Return Policy: ${g}</p>
+        <p class="modal-product__price">Price: ${y}$</p>
+        <button class="modal-product__buy-btn" type="button">Buy</button>
+      </div>
+`}const u=document.querySelector(".modal"),L=document.querySelector(".modal-product"),k=document.querySelector(".modal__close-btn");k.addEventListener("click",b);function C(t){L.innerHTML=$(t),u.classList.add("modal--is-open")}function b(){u.classList.remove("modal--is-open"),L.innerHTML=""}u.addEventListener("click",t=>{t.target===u&&b()});const l=document.querySelector("div.not-found");async function w(t){if(t.target.nodeName!=="BUTTON")return;const e=t.target.textContent;r.currentCategory=e,r.currentPage=1,n.disabled=!0;try{let o;if(e==="All")o=await d(r.currentPage);else if(o=await f(e,r.currentPage),o.products.length===0){l.classList.add("not-found--visible"),a.innerHTML="",n.classList.add("is-hidden");return}a.innerHTML=i(o.products),p(o.total),l.classList.remove("not-found--visible"),document.querySelectorAll(".categories__btn").forEach(c=>c.classList.remove("categories__btn--active")),t.target.classList.add("categories__btn--active")}catch(o){console.log(o)}finally{n.disabled=!1,r.currentSearch=""}}async function E(t){if(t.target===t.currentTarget)return;const o=t.target.closest(".products__item").dataset.id;try{const c=await v(o);C(c)}catch(c){console.log(c)}}async function T(){r.currentPage+=1;let t;try{r.currentSearch?t=await h(r.currentSearch,r.currentPage):r.currentCategory==="All"?(t=await d(r.currentPage),r.currentSearch=""):t=await f(r.currentCategory,r.currentPage),a.insertAdjacentHTML("beforeend",i(t.products)),p(t.total)}catch(e){console.log(e)}}function p(t){r.totalPages=Math.ceil(t/r.limit),n.classList.toggle("is-hidden",r.currentPage>=r.totalPages)}async function q(t){t.preventDefault(),r.currentPage=1;const e=t.target.elements.searchValue.value.trim();if(e!=="")try{const o=await h(e,r.currentPage);if(r.currentSearch=e,o.products.length===0){console.log("noting"),a.innerHTML="",l.classList.add("not-found--visible");return}a.innerHTML=i(o.products),p(o.total),l.classList.remove("not-found--visible")}catch(o){console.log(o)}finally{t.target.reset()}}async function H(){const t=document.querySelector(".search-form__input");t.value="",r.currentSearch="",r.currentPage=1;try{const e=await d(r.currentPage);a.innerHTML=i(e.products),p(e.total),l.classList.remove("not-found--visible")}catch(e){console.log(e)}}const r={currentPage:1,currentCategory:"All",limit:12,totalPages:1,currentSearch:""},P=document.querySelector("ul.categories"),n=document.querySelector(".load-more-btn"),a=document.querySelector("ul.products"),B=document.querySelector(".search-form"),A=document.querySelector("button.search-form__btn-clear");P.addEventListener("click",w);a.addEventListener("click",E);n.addEventListener("click",T);B.addEventListener("submit",q);A.addEventListener("click",H);S().then(t=>{const e=["All",...t];P.innerHTML=M(e)}).catch(t=>{console.log(t.message)});d(r.currentPage).then(t=>{const{products:e,total:o}=t;r.totalPages=Math.ceil(o/r.limit),a.innerHTML=i(e),r.totalPages>r.limit&&n.classList.remove("is-hidden")}).catch(t=>{console.log(t.message)});
 //# sourceMappingURL=index.js.map
