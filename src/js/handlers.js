@@ -5,7 +5,7 @@ import {
   getSearchCategory,
 } from './products-api';
 import { createProductsMarkup } from './render-function';
-import { productsList, state, loadMoreBtn } from '../home';
+import { productsList, state, loadMoreBtn } from './constants';
 import { showModal } from './modal';
 import axios from 'axios';
 
@@ -113,6 +113,7 @@ export async function hendleSearchSubmit(event) {
       console.log('noting');
       productsList.innerHTML = '';
       notFoundEl.classList.add('not-found--visible');
+      updateLoadMoreBtn(0);
       return;
     }
     productsList.innerHTML = createProductsMarkup(data.products);

@@ -15,20 +15,11 @@ import {
   hendleSearchSubmit,
   handleSearchClear,
 } from './js/handlers';
-
-// let currentPage = 1;
-// const limit = 12;
-export const state = {
-  currentPage: 1,
-  currentCategory: 'All',
-  limit: 12,
-  totalPages: 1,
-  currentSearch: '',
-};
+import { updateCountItems, updateWishlistCount } from './js/helpers';
+import { getCart, getWishlist } from './js/storage';
+import { productsList, loadMoreBtn, state } from './js/constants';
 
 const categoriesList = document.querySelector('ul.categories');
-export const loadMoreBtn = document.querySelector('.load-more-btn');
-export const productsList = document.querySelector('ul.products');
 const searchFormEl = document.querySelector('.search-form');
 const clearBtnEl = document.querySelector('button.search-form__btn-clear');
 
@@ -37,6 +28,8 @@ productsList.addEventListener('click', handleProductClick);
 loadMoreBtn.addEventListener('click', onLoadMore);
 searchFormEl.addEventListener('submit', hendleSearchSubmit);
 clearBtnEl.addEventListener('click', handleSearchClear);
+updateCountItems(getCart());
+updateWishlistCount(getWishlist());
 
 getCategoryList()
   .then(res => {
